@@ -5,7 +5,8 @@
   "description": "將任意網頁上的影片彈出為浮動視窗，覆蓋在其他頁面上方",
   "permissions": [
     "activeTab",
-    "scripting"
+    "scripting",
+    "storage"
   ],
   "action": {
     "default_popup": "popup.html",

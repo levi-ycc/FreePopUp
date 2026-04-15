@@ -14,6 +14,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const errorState = document.getElementById('error-state');
   const statusText = document.getElementById('status-text');
   const statusDot = document.querySelector('.status-dot');
+  const pipModeRadios = document.querySelectorAll('input[name="pipMode"]');
+
+  // 讀取設定
+  chrome.storage.local.get(['pipMode'], (result) => {
+    if (result.pipMode) {
+      const radio = document.querySelector(`input[name="pipMode"][value="${result.pipMode}"]`);
+      if (radio) radio.checked = true;
+    }
+  });
+
+  // 監聽設定改變
+  pipModeRadios.forEach(radio => {
+    radio.addEventListener('change', (e) => {
+      chrome.storage.local.set({ pipMode: e.target.value });
+    });
+  });
 
   loadVideos();
 

@@ -310,15 +310,21 @@
       currentPipWindow.close();
     }
 
-    // 優先使用 Document PiP API
-    if ('documentPictureInPicture' in window) {
+    // 取得使用者設定的模式
+    const storage = await new Promise(resolve => chrome.storage.local.get(['pipMode'], resolve));
+    const mode = storage.pipMode || 'traditional'; // 預設使用傳統模式
+
+    if (mode === 'document' && 'documentPictureInPicture' in window) {
       return await openDocumentPiP(video);
-    }
-    // 備援：傳統 PiP
-    else if (video.requestPictureInPicture) {
+    } else if (mode === 'document' && video.requestPictureInPicture) {
+      // 備援：不支援 Document PiP 時降級
       return await openTraditionalPiP(video);
-    }
-    else {
+    } else if (mode === 'traditional' && video.requestPictureInPicture) {
+      return await openTraditionalPiP(video);
+    } else if ('documentPictureInPicture' in window) {
+      // 備援
+      return await openDocumentPiP(video);
+    } else {
       return { success: false, error: '此瀏覽器不支援 Picture-in-Picture' };
     }
   }
