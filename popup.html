@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreePopUp</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- 頂部標題區 -->
+  <header id="popup-header">
+    <div class="header-icon">🎬</div>
+    <div class="header-text">
+      <h1>FreePopUp</h1>
+      <p class="subtitle">影片彈出浮動視窗</p>
+    </div>
+  </header>
+
+  <!-- 狀態/提示區 -->
+  <div id="status-bar">
+    <div class="status-dot"></div>
+    <span id="status-text">掃描中...</span>
+  </div>
+
+  <!-- 影片列表 -->
+  <div id="video-list">
+    <!-- 由 JS 動態產生 -->
+  </div>
+
+  <!-- 空狀態 -->
+  <div id="empty-state" class="hidden">
+    <div class="empty-icon">📺</div>
+    <p class="empty-title">未偵測到影片</p>
+    <p class="empty-desc">在含有影片的頁面上使用此擴充功能</p>
+  </div>
+
+  <!-- 錯誤狀態 -->
+  <div id="error-state" class="hidden">
+    <div class="empty-icon">⚠️</div>
+    <p class="empty-title" id="error-title">發生錯誤</p>
+    <p class="empty-desc" id="error-desc"></p>
+  </div>
+
+  <!-- 底部提示 -->
+  <footer id="popup-footer">
+    <div class="shortcut-hint" style="flex-direction: column; gap: 4px;">
+      <span>💡 點擊「彈出」後，在頁面影片上點擊覆蓋按鈕</span>
+      <span>
+        浮動視窗快捷鍵：
+        <span class="kbd">Space</span> 播放/暫停
+        <span class="kbd">←→</span> 快進快退
+        <span class="kbd">Esc</span> 關閉
+      </span>
+    </div>
+  </footer>
+
+  <script src="popup.js"></script>
+</body>
+</html>

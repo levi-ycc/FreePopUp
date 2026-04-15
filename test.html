@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreePopUp 測試頁面</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #0f0f1a;
+      color: #e8e8f0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      padding: 32px;
+      min-height: 100vh;
+    }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #7C3AED, #06B6D4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .subtitle {
+      color: rgba(232,232,240,0.5);
+      margin-bottom: 32px;
+      font-size: 14px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: rgba(30, 30, 50, 0.8);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 16px;
+      backdrop-filter: blur(8px);
+    }
+    .card h2 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: #06B6D4;
+    }
+    video {
+      width: 100%;
+      border-radius: 8px;
+      background: #000;
+    }
+    .instructions {
+      margin-top: 32px;
+      padding: 20px;
+      background: rgba(124, 58, 237, 0.1);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 12px;
+    }
+    .instructions h3 {
+      color: #7C3AED;
+      margin-bottom: 10px;
+    }
+    .instructions ol {
+      padding-left: 20px;
+      color: rgba(232,232,240,0.7);
+      line-height: 2;
+    }
+    .instructions code {
+      background: rgba(255,255,255,0.1);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎬 FreePopUp 測試頁面</h1>
+  <p class="subtitle">這個頁面包含多個測試影片，用來驗證擴充功能的影片偵測與彈出功能</p>
+
+  <div class="grid">
+    <div class="card">
+      <h2>測試影片 1 — Big Buck Bunny</h2>
+      <video controls muted>
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <div class="card">
+      <h2>測試影片 2 — Elephant Dream</h2>
+      <video controls muted>
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4" type="video/mp4">
+      </video>
+    </div>
+
+    <div class="card">
+      <h2>測試影片 3 — Sintel</h2>
+      <video controls muted>
+        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+
+  <div class="instructions">
+    <h3>📋 使用步驟</h3>
+    <ol>
+      <li>開啟 Chrome，前往 <code>chrome://extensions/</code></li>
+      <li>開啟右上角的「開發人員模式」</li>
+      <li>點擊「載入未封裝項目」，選擇 <code>FreePopUp</code> 資料夾</li>
+      <li>回到此頁面，播放任一影片</li>
+      <li>點擊瀏覽器右上角的 FreePopUp 擴充圖示</li>
+      <li>在彈出選單中點擊「🚀 彈出」</li>
+      <li>影片將以浮動視窗方式顯示在最上方</li>
+      <li>切換到 Facebook 等其他頁面，影片仍會覆蓋在上方！</li>
+    </ol>
+  </div>
+</body>
+</html>
