@@ -54,3 +54,17 @@ function forwardToActiveTab(message, sendResponse) {
 chrome.runtime.onInstalled.addListener(() => {
   console.log('FreePopUp 已安裝！');
 });
+
+// 監聽快捷鍵命令（Alt+H 隱藏/顯示 PiP 視窗）
+// 廣播到所有分頁，只有有 PiP 的分頁會實際處理
+chrome.commands.onCommand.addListener((command) => {
+  if (command === 'toggle-pip-visibility') {
+    chrome.tabs.query({}, (tabs) => {
+      for (const tab of tabs) {
+        chrome.tabs.sendMessage(tab.id, { action: 'togglePipVisibility' }, () => {
+          if (chrome.runtime.lastError) { /* ignore */ }
+        });
+      }
+    });
+  }
+});

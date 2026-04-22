@@ -28,6 +28,15 @@
       "run_at": "document_idle"
     }
   ],
+  "commands": {
+    "toggle-pip-visibility": {
+      "suggested_key": {
+        "default": "Alt+H",
+        "mac": "Alt+H"
+      },
+      "description": "隱藏/顯示浮動視窗"
+    }
+  },
   "background": {
     "service_worker": "background.js"
   }

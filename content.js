@@ -17,6 +17,10 @@
   let originalVideoNextSibling = null;
   let pippedVideo = null;
 
+  // 隱藏/顯示 PiP 視窗相關
+  let pipWindowHidden = false;
+  let hiddenPipMode = null; // 'document' 或 'traditional'
+
   // 覆蓋層和按鈕相關
   let overlaysVisible = false;
   let overlayElements = [];
@@ -377,7 +381,22 @@
 
       // 監聽關閉
       pipWindow.addEventListener('pagehide', () => {
-        restoreVideo();
+        if (pipWindowHidden) {
+          // 主動隱藏：將影片放回頁面，但保留 pippedVideo 引用以便恢復
+          if (pippedVideo && originalVideoParent) {
+            try {
+              if (originalVideoNextSibling && originalVideoNextSibling.parentNode === originalVideoParent) {
+                originalVideoParent.insertBefore(pippedVideo, originalVideoNextSibling);
+              } else {
+                originalVideoParent.appendChild(pippedVideo);
+              }
+            } catch (e) {}
+          }
+          currentPipWindow = null;
+        } else {
+          // 真正關閉：完全清除狀態
+          restoreVideo();
+        }
       });
 
       return { success: true, method: 'documentPiP' };
@@ -778,6 +797,67 @@
   }
 
   // ============================================================
+  // TAB 鍵隱藏/顯示 PiP 視窗
+  // ============================================================
+
+  /**
+   * 切換 PiP 視窗的顯示/隱藏
+   */
+  function togglePipVisibility() {
+    // === 隱藏 === 
+    // Document PiP 模式：關閉視窗
+    if (currentPipWindow && !currentPipWindow.closed) {
+      pipWindowHidden = true;
+      hiddenPipMode = 'document';
+      if (pippedVideo && !pippedVideo.paused) {
+        pippedVideo.dataset.wasPlaying = 'true';
+      }
+      pippedVideo.pause();
+      currentPipWindow.close();
+      return true;
+    }
+    // 傳統 PiP 模式：退出 PiP
+    if (pippedVideo && document.pictureInPictureElement) {
+      pipWindowHidden = true;
+      hiddenPipMode = 'traditional';
+      pippedVideo.dataset.wasPlaying = pippedVideo.paused ? 'false' : 'true';
+      pippedVideo.pause();
+      document.exitPictureInPicture().catch(() => {});
+      return true;
+    }
+
+    // === 恢復 ===
+    if (pippedVideo && pipWindowHidden) {
+      pipWindowHidden = false;
+      const wasPlaying = pippedVideo.dataset.wasPlaying === 'true';
+      delete pippedVideo.dataset.wasPlaying;
+
+      if (hiddenPipMode === 'document') {
+        // 重新開啟 Document PiP
+        openDocumentPiP(pippedVideo).then((result) => {
+          if (result.success && wasPlaying && pippedVideo) {
+            pippedVideo.play().catch(() => {});
+          }
+        }).catch(() => { pipWindowHidden = false; });
+      } else {
+        // 重新進入傳統 PiP
+        pippedVideo.requestPictureInPicture().then(() => {
+          if (wasPlaying && pippedVideo) {
+            pippedVideo.play().catch(() => {});
+          }
+        }).catch((err) => {
+          console.warn('FreePopUp: 無法恢復 PiP', err);
+          pipWindowHidden = false;
+        });
+      }
+      hiddenPipMode = null;
+      return true;
+    }
+
+    return false;
+  }
+
+  // ============================================================
   // 訊息監聯
   // ============================================================
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
@@ -800,6 +880,12 @@
           sendResponse({ success: false, error: err.message });
         });
         return true;
+
+      case 'togglePipVisibility':
+        // 來自 Alt+H 快捷鍵（透過 background.js 轉發）
+        togglePipVisibility();
+        sendResponse({ success: true });
+        break;
 
       default:
         break;
